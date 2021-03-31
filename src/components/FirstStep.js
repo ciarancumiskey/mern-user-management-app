@@ -3,15 +3,24 @@ import { useForm } from 'react-hook-form';
 import { Form, Button } from 'react-bootstrap';
 
 const FirstStep = (props) => {
+    /**
+     * register will be used as a ref by the useForm() hook, and is assigned 
+     * to each input field so it can track changes in those.
+     * handleSubmit, like its name suggests, is called when the form is submitted.
+     * errors is for errors.    
+     */
     const { register, handleSubmit, errors } = useForm();
 
     const onSubmit = (data) => {
+        //TODO: Set up database
         console.log(data);
+        //Automatically navigate to the next stage of the form
+        props.history.push('/second');
     };
     return (
         <Form className="input-form" onSubmit={handleSubmit(onSubmit)}>
             <div>
-                Name
+                <h2>Please enter your name:</h2>
             </div>
             <div className="col-md-6 offset-md-3">
                 <Form.Group controlId="first_name">

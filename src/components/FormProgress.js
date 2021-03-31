@@ -6,7 +6,7 @@ const FormProgress = () => {
             <div className="steps">
                 <div className="step">
                     <div>1</div>
-                    <div>Name</div>
+                    <div>Step 1</div>
                 </div>
                 <div className="step">
                     <div>2</div>
