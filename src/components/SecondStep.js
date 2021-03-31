@@ -7,7 +7,7 @@ const SecondStep = (props) => {
     const onSubmit = (data) => {
         console.log(data);
         //TODO: Implement the final stage
-        //props.history.push('/third');
+        props.history.push('/third');
     };
     return (
         <Form className="input-form" onSubmit={handleSubmit(onSubmit)}>
