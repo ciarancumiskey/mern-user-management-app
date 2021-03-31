@@ -17,9 +17,24 @@ const ThirdStep = (props) => {
     useEffect(() => {
         const getCountries = async () => {
             try {
+                setIsLoading(true);
                 const result = await csc.getAllCountries();
+                let allCountries = [];
+                //Use map() so that only the ISO codes and names are obtained.
+                allCountries = result?.map(({ isoCode, name }) => ({
+                    isoCode,
+                    name
+                }));
+                //Assign a default empty object to prevent errors before the whole list is loaded
+                const [{ isoCode: firstCountry } = {}] = allCountries;
+                setCountries(allCountries);
+                setSelectedCountry(firstCountry);
+                setIsLoading(false);
                 console.log(result);
-            } catch (error) { }
+            } catch (error) {
+                setCountries([]);
+                setIsLoading(false);
+            }
         };
         getCountries();
     }, []); //pass an empty array as useEffect's second arg so it'll only get called once
@@ -29,7 +44,26 @@ const ThirdStep = (props) => {
 
     return (
         <Form className="input-form" onSubmit={handleSubmit}>
-            <div className="col-md-6 offset-md-3"></div>
+            <div className="col-md-6 offset-md-3">
+                <Form.Group controlId="country">
+                    {isLoading && (
+                        <p className="loading">Loading countries...</p>
+                    )}
+                    <Form.Label>Country</Form.Label>
+                    <Form.Control
+                        as="select"
+                        name="country"
+                        value={selectedCountry}
+                        onChange={(event) => setSelectedCountry(event.target.value)}
+                    >
+                        {countries.map(({ isoCode, name }) => (
+                            <option value={isoCode} key={isoCode}>
+                                {name}
+                            </option>
+                        ))}
+                    </Form.Control>
+                </Form.Group>
+            </div>
         </Form>
     );
 };
