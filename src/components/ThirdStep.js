@@ -18,10 +18,10 @@ const ThirdStep = (props) => {
         const getCountries = async () => {
             try {
                 setIsLoading(true);
-                const result = await csc.getAllCountries();
+                const countryResult = await csc.getAllCountries();
                 let allCountries = [];
                 //Use map() so that only the ISO codes and names are obtained.
-                allCountries = result?.map(({ isoCode, name }) => ({
+                allCountries = countryResult?.map(({ isoCode, name }) => ({
                     isoCode,
                     name
                 }));
@@ -30,7 +30,7 @@ const ThirdStep = (props) => {
                 setCountries(allCountries);
                 setSelectedCountry(firstCountry);
                 setIsLoading(false);
-                console.log(result);
+                console.log(countryResult);
             } catch (error) {
                 setCountries([]);
                 setIsLoading(false);
@@ -38,6 +38,28 @@ const ThirdStep = (props) => {
         };
         getCountries();
     }, []); //pass an empty array as useEffect's second arg so it'll only get called once
+    useEffect(() => {
+        const getStates = async () => {
+            try {
+                const stateResult = await csc.getStatesOfCountry(selectedCountry);
+                let allStates = [];
+                allStates = stateResult?.map(({ isoCode, name }) => ({
+                    isoCode, name
+                }));
+                console.log({ allStates });
+                const [{ isoCode: firstState = '' } = {}] = allStates;
+                setCities([]);
+                setSelectedCity('');
+                setStates(allStates);
+                setSelectedState(firstState);
+            } catch (error) {
+                setStates([]);
+                setCities([]);
+                setSelectedCity('');
+            }
+        };
+        getStates();
+    }, [selectedCountry]);
     const handleSubmit = async (event) => {
         event.preventDefault();
     };
@@ -61,6 +83,23 @@ const ThirdStep = (props) => {
                                 {name}
                             </option>
                         ))}
+                    </Form.Control>
+                </Form.Group>
+                <Form.Group controlId="state">
+                    <Form.Label>State/Region/Province</Form.Label>
+                    <Form.Control as="select" name="state" value={selectedState}
+                        onChange={(event) => setSelectedState(event.target.value)}>
+                        {states.length > 0 ?
+                            (states.map(({ isoCode, name }) => (
+                                <option value={isoCode} key={isoCode}>
+                                    {name}
+                                </option>
+                            ))
+                        ) : (
+                                <option value="" key="">
+                                    No state found
+                                </option>
+                        )}
                     </Form.Control>
                 </Form.Group>
             </div>
