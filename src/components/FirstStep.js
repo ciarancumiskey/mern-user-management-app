@@ -31,7 +31,8 @@ const FirstStep = (props) => {
             <div>
                 <h2>Please enter your name:</h2>
             </div>
-            <motion.div className="col-md-6 offset-md-3" initial={{ x: '-100vw' }} animate={{ x: 0 }}>
+            <motion.div className="col-md-6 offset-md-3"
+                initial={{ x: '-100vw' }} animate={{ x: 0 }} transition={{ stiffness: 150 }}>
                 <Form.Group controlId="first_name">
                     <Form.Label>First Name(s)</Form.Label>
                     <Form.Control
