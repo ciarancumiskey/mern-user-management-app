@@ -17,7 +17,7 @@ const FormProgress = ({ location: { pathname } }) => {
                 </div>
                 <div className={`${isSecondStep ? 'step active' : 'step'}`}>
                     <div>2</div>
-                    <div>{isThirdStep ? (<Link to="/">Step 2</Link>)
+                    <div>{isThirdStep ? (<Link to="/second">Step 2</Link>)
                         : ('Step 2')}
                     </div>
                 </div>
