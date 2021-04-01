@@ -60,6 +60,21 @@ const ThirdStep = (props) => {
         };
         getStates();
     }, [selectedCountry]);
+    useEffect(() => {
+        const getCities = async () => {
+            try {
+                const cityResult = await csc.getCitiesOfState(selectedCountry, selectedState);
+                let allCities = [];
+                allCities = cityResult?.map(({ name }) => ({ name }));
+                const [{ name: firstCity = '' } = {}] = allCities;
+                setCities(allCities);
+                setSelectedCity(firstCity);
+            } catch (error) {
+                setCities([]);
+            }
+        };
+        getCities();
+    }, [selectedState]);
     const handleSubmit = async (event) => {
         event.preventDefault();
     };
@@ -72,12 +87,8 @@ const ThirdStep = (props) => {
                         <p className="loading">Loading countries...</p>
                     )}
                     <Form.Label>Country</Form.Label>
-                    <Form.Control
-                        as="select"
-                        name="country"
-                        value={selectedCountry}
-                        onChange={(event) => setSelectedCountry(event.target.value)}
-                    >
+                    <Form.Control as="select" name="country" value={selectedCountry}
+                        onChange={(event) => setSelectedCountry(event.target.value)}>
                         {countries.map(({ isoCode, name }) => (
                             <option value={isoCode} key={isoCode}>
                                 {name}
@@ -102,6 +113,21 @@ const ThirdStep = (props) => {
                         )}
                     </Form.Control>
                 </Form.Group>
+                <Form.Group controlId="city">
+                    <Form.Label>City/Town</Form.Label>
+                    <Form.Control as="select" name="city" value={selectedCity}
+                        onChange={(event) => setSelectedCity(event.target.value)}>
+                        {cities.length > 0 ? (cities.map(({ name }) => (
+                            <option value={name} key={name}>
+                                {name}
+                            </option>
+                        ))
+                        ) : (
+                                <option value="">No cities/towns found</option>
+                            )}
+                    </Form.Control>
+                </Form.Group>
+
             </div>
         </Form>
     );
