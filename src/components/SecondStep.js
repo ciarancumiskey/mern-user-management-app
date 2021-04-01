@@ -3,10 +3,18 @@ import { useForm } from 'react-hook-form';
 import { Form, Button } from 'react-bootstrap';
 
 const SecondStep = (props) => {
-    const { register, handleSubmit, errors } = useForm();
+    const { user } = props;
+    const { register, handleSubmit, errors } = useForm({
+        defaultValues: {
+            /*  If the user has navigated back to this step, this will pre-populate
+                the form with what they've already entered */
+            user_email: user.user_email, user_password: user.user_password
+        }
+    });
     const onSubmit = (data) => {
         console.log(data);
         //TODO: Implement the final stage
+        props.updateUser(data);
         props.history.push('/third');
     };
     return (

@@ -1,20 +1,29 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Form, Button } from 'react-bootstrap';
+import { motion } from 'framer-motion';
 
 const FirstStep = (props) => {
+    const { user } = props;
     /**
      * register will be used as a ref by the useForm() hook, and is assigned 
      * to each input field so it can track changes in those.
      * handleSubmit, like its name suggests, is called when the form is submitted.
      * errors is for errors.    
      */
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, errors } = useForm({
+        /*  If the user has navigated back to this step, this will pre-populate 
+            the form with what they've already entered */
+        defaultValues: {
+            first_name: user.first_name, surname: user.surname
+        }
+    });
 
     const onSubmit = (data) => {
         //TODO: Set up database
         console.log(data);
         //Automatically navigate to the next stage of the form
+        props.updateUser(data);
         props.history.push('/second');
     };
     return (
@@ -22,7 +31,7 @@ const FirstStep = (props) => {
             <div>
                 <h2>Please enter your name:</h2>
             </div>
-            <div className="col-md-6 offset-md-3">
+            <motion.div className="col-md-6 offset-md-3" initial={{ x: '-100vw' }} animate={{ x: 0 }}>
                 <Form.Group controlId="first_name">
                     <Form.Label>First Name(s)</Form.Label>
                     <Form.Control
@@ -62,7 +71,7 @@ const FirstStep = (props) => {
                 <Button variant="primary" type="submit">
                     Next
                 </Button>
-            </div>
+            </motion.div>
         </Form>
     );
 };
