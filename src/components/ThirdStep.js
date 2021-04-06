@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import csc from 'country-state-city';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { BASE_API_URL } from '../utils/constants';
 import { motion } from 'framer-motion';
 
@@ -78,6 +79,35 @@ const ThirdStep = (props) => {
     }, [selectedState]);
     const handleSubmit = async (event) => {
         event.preventDefault();
+        try {
+            const { user } = props;
+            const updatedData = {
+                country: countries.find((country) => country.isoCode === selectedCountry)?.name,
+                state: states.find((state) => state.isoCode === selectedState)?.name || '',
+                city: selectedCity
+            };
+            await axios.post(`${BASE_API_URL}/register`, {
+                ...user,
+                ...updatedData
+            });
+            Swal.fire('Registration complete', "You've successfully registered.", 'success')
+                .then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            props.history.push('/');
+                        }
+                    }
+                );
+        } catch (error) {
+            if (error.response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Registration failed',
+                    text: error.response.data
+                });
+
+                console.log('Error:', error.response.data);
+            }
+        }
     };
 
     return (
