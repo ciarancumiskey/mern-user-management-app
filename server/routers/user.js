@@ -21,4 +21,26 @@ router.post('/register', async (request, result) => {
         result.status(500).send('Registration failed. Please try again.');
     }
 });
+
+router.post('/login', async (request, result) => {
+    try {
+        //Check if an account exists
+        const user = await User.findOne({ user_email: request.body.user_email });
+        if (!user) {
+            return result.status(400).send("Account not found for this email address.");
+        }
+        //Check if the user entered the correct password
+        const isMatch = await bcrypt.compare(
+            request.body.user_password, user.user_password
+        );
+        if (!isMatch) {
+            return result.status(400).send("Incorrect email/password entered, please try again.");
+        }
+        //Remove the hashed password from the Object that will be sent back to the user
+        const { user_password, ...rest } = user.toObject();
+        return result.send(rest);
+    } catch (error) {
+        return result.status(500).send(error);
+    }
+});
 module.exports = router;
