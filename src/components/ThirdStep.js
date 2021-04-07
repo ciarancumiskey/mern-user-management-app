@@ -86,6 +86,7 @@ const ThirdStep = (props) => {
                 state: states.find((state) => state.isoCode === selectedState)?.name || '',
                 city: selectedCity
             };
+            //Post the data to the API as a JSON object
             await axios.post(`${BASE_API_URL}/register`, {
                 ...user,
                 ...updatedData
