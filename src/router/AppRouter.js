@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import FirstStep from '../components/FirstStep';
 import Header from '../components/Header';
 import SecondStep from '../components/SecondStep';
@@ -33,6 +33,7 @@ const AppRouter = () => {
                         <ThirdStep {...props} user={user} />
                     )} path="/third" />
                     <Route component={Login} path="/login" />
+                    <Route render={() => <Redirect to="/" />}/>
                 </Switch>
             </div>
         </BrowserRouter>
